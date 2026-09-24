@@ -1,0 +1,96 @@
+name: xxksu Kernel Compile
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout kernel source
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y bc bison flex libssl-dev libncurses-dev lz4 ccache
+
+      - name: Checkout Actions Repo
+        uses: actions/checkout@v4
+
+      # 1. Delete Microsoft, Android, and Java bloatware to free up ~30GB of disk space
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          tool-cache: true
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: false
+
+      # 2. Now you safely have plenty of room to allocate a massive 20GB Swap file
+      - name: Set up Swap Space
+        uses: pierotofy/set-swap-space@master
+        with:
+          swap-size-gb: 20
+
+      - name: Get clang toolchain (same as Crave clang-r563880c)
+        run: |
+          mkdir -p clang
+          curl -LSs "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r563880c.tar.gz" -o clang.tar.gz
+          tar -xzf clang.tar.gz -C clang
+
+      - name: Get kernel build tools (pahole, dtc, lz4)
+        run: |
+          mkdir -p kernel-build-tools
+          curl -LSs "https://android.googlesource.com/kernel/prebuilts/build-tools/+archive/refs/heads/main/linux-x86.tar.gz" -o kbt.tar.gz
+          tar -xzf kbt.tar.gz -C kernel-build-tools
+
+        - name: Clone kernel
+          run:
+            git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 kernel_workspace
+
+      - name: Setup xxksu
+        run: |
+          cd $GITHUB_WORKSPACE/kernel_workspace
+          curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash - master
+          cat <<EOF >> arch/arm64/configs/vendor/ext_config/devon-default.config
+
+          #xxKernelSU
+
+          CONFIG_KSU=y
+          CONFIG_KSU_HACK_ARM64_BRANCH_LINK=y
+
+          EOF
+
+
+      - name: Build kernel
+        run: |
+          export PATH=$GITHUB_WORKSPACE/clang/bin:$GITHUB_WORKSPACE/kernel-build-tools/bin:$PATH
+          export ARCH=arm64
+          export LLVM=1
+          export LLVM_IAS=1
+          export CC="clang"
+          export LD=ld.lld
+          export TARGET_BOARD_PLATFORM=bengal
+
+          cd $GITHUB_WORKSPACE/kernel_workspace
+
+          mkdir -p out
+          make O=out vendor/bengal-perf_defconfig
+          scripts/kconfig/merge_config.sh -m -O out out/.config arch/arm64/configs/vendor/ext_config/moto-bengal.config
+          scripts/kconfig/merge_config.sh -m -O out out/.config arch/arm64/configs/vendor/ext_config/devon-default.config
+          make O=out olddefconfig
+          make O=out -j$(nproc)
+
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: kernel-output
+          path: |
+            out/arch/arm64/boot/Image*
+            out/.config
+
+
