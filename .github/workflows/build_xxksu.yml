@@ -56,7 +56,7 @@ jobs:
       - name: Setup xxksu
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
-          curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash - master
+          curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash -
           cat <<EOF >> arch/arm64/configs/vendor/ext_config/devon-default.config
 
           #xxKernelSU
