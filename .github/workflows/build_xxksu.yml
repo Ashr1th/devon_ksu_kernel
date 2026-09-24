@@ -48,8 +48,8 @@ jobs:
           curl -LSs "https://android.googlesource.com/kernel/prebuilts/build-tools/+archive/refs/heads/main/linux-x86.tar.gz" -o kbt.tar.gz
           tar -xzf kbt.tar.gz -C kernel-build-tools
 
-        - name: Clone kernel
-          run:
+      - name: Clone kernel
+        run:
             git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 kernel_workspace
 
       - name: Setup xxksu
