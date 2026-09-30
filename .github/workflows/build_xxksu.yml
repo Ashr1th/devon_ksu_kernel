@@ -12,7 +12,8 @@ jobs:
 
       - name: Get clang toolchain (same as Crave clang-r563880c)
         run: |
-          wget -qO clang.tar.gz "https://github.com/SA9990/Toolchain/releases/download/clang-r563880c/clang-r563880c.tar.gz"
+          #wget -qO clang.tar.gz "https://github.com/SA9990/Toolchain/releases/download/clang-r563880c/clang-r563880c.tar.gz"
+          wget -qO clang.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f7de4376c4a749c1dde95c6f55d6c44cda883fce/clang-r487747c.tar.gz"
           tar -xzf clang.tar.gz
           rm clang.tar.gz
 
@@ -54,7 +55,7 @@ jobs:
 
       - name: Clone kernel
         run:
-          git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 kernel_workspace
+          git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 -b lineage-23.2 kernel_workspace
 
       - name: Setup xxksu
         run: |
@@ -72,7 +73,7 @@ jobs:
       - name: Build kernel
         run: |
           # export PATH=$GITHUB_WORKSPACE/clang/toolchain/bin:$GITHUB_WORKSPACE/kernel-build-tools/bin:$PATH
-          export PATH=$GITHUB_WORKSPACE//bin:$PATH
+          export PATH=$GITHUB_WORKSPACE/bin:$PATH
           export ARCH=arm64
           export LLVM=1
           export LLVM_IAS=1
