@@ -96,6 +96,8 @@ jobs:
           export CC="clang"
           export LD=ld.lld
           export TARGET_BOARD_PLATFORM=bengal
+          CROSS_COMPILE=aarch64-none-linux-gnu-
+          CROSS_COMPILE_ARM32=arm-linux-gnueabi-
 
           cd $GITHUB_WORKSPACE/kernel_workspace
 
