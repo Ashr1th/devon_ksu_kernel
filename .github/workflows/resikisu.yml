@@ -81,7 +81,9 @@ jobs:
 
           EOF
 
-          patch p1< ../susfspatch.patch
+          git apply ../suspatch.patch
+          chmod +x ../inline.sh
+          ./inline.sh
 
       - name: Build kernel
         run: |
