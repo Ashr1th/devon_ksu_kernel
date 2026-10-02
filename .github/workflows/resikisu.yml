@@ -63,12 +63,13 @@ jobs:
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
           #curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash -
+          curl -LSs "https://raw.githubusercontent.com/ReSukiSU/ReSukiSU/main/kernel/setup.sh" | bash
           cat <<EOF >> arch/arm64/configs/vendor/ext_config/devon-default.config
 
-          #xxKernelSU
-
-          CONFIG_KSU=y
-          CONFIG_KSU_HACK_ARM64_BRANCH_LINK=y
+          # ReSukiSU
+           CONFIG_KSU=y
+           CONFIG_KSU_SUSFS=y
+           
 
           EOF
 
