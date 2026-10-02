@@ -82,8 +82,9 @@ jobs:
           EOF
 
           git apply ../suspatch.patch
-          chmod +x ../inline.sh
+          chmod +x ../inline.sh && chmod +x ../hook.sh
           ./inline.sh
+          ./hook.sh
 
       - name: Build kernel
         run: |
