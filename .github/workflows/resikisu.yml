@@ -55,12 +55,14 @@ jobs:
 
       - name: Clone kernel
         run:
-          git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 -b lineage-23.2 kernel_workspace
+          #git clone --depth=1 https://github.com/LineageOS/android_kernel_motorola_sm6225 -b lineage-23.2 kernel_workspace
+          git clone --depth 1 --no-checkout https://github.com/LineageOS/android_kernel_motorola_sm6225 kernel_workspace && cd kernel_workspace && git fetch origin 7f2f53c2bb9a4c4dd5cff162b6c62970e6d9b812 && git checkout FETCH_HEAD
+          
 
-      - name: Setup xxksu
+      - name: Setup resukisu susfa
         run: |
           cd $GITHUB_WORKSPACE/kernel_workspace
-          curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash -
+          #curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/refs/heads/master/kernel/setup.sh" | bash -
           cat <<EOF >> arch/arm64/configs/vendor/ext_config/devon-default.config
 
           #xxKernelSU
