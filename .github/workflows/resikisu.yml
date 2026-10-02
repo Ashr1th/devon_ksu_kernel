@@ -81,6 +81,8 @@ jobs:
 
           EOF
 
+          patch p1< ../susfspatch.patch
+
       - name: Build kernel
         run: |
           # export PATH=$GITHUB_WORKSPACE/clang/toolchain/bin:$GITHUB_WORKSPACE/kernel-build-tools/bin:$PATH
