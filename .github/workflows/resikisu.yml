@@ -1,4 +1,4 @@
-name: xxksu Kernel Compile
+name: resukisu and sus
 
 on:
   workflow_dispatch:
