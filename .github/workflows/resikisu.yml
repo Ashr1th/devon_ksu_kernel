@@ -12,8 +12,8 @@ jobs:
 
       - name: Get clang toolchain (same as Crave clang-r563880c)
         run: |
-          #wget -qO clang.tar.gz "https://github.com/SA9990/Toolchain/releases/download/clang-r563880c/clang-r563880c.tar.gz"
-          wget -qO clang.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f7de4376c4a749c1dde95c6f55d6c44cda883fce/clang-r487747c.tar.gz"
+          wget -qO clang.tar.gz "https://github.com/SA9990/Toolchain/releases/download/clang-r563880c/clang-r563880c.tar.gz"
+          #wget -qO clang.tar.gz "https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f7de4376c4a749c1dde95c6f55d6c44cda883fce/clang-r487747c.tar.gz"
           tar -xzf clang.tar.gz
           rm clang.tar.gz
 
